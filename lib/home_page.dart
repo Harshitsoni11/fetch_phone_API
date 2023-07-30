@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final PageController pageController;
   int pageNo = 0;
+  bool getapi=false;
 
 
   @override
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                               right: 8, left: 8, top: 24, bottom: 12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24.0),
-                            color: Colors.amberAccent,
+                            color: Colors.white,
                           ),
                           child: Image.network(fit:BoxFit.fill
                           ,Buttonlist.pageimg[index]),
@@ -304,139 +305,144 @@ class _HomePageState extends State<HomePage> {
               FutureBuilder(
                   future: phoneService.fetchListings(),
                   builder: (context, snapshot) {
-                    return GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12.0,
-                          mainAxisSpacing: 12.0,
-                          mainAxisExtent: 300,
-                        ),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else {
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  16.0,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const Row(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .end, // Align the icon to the right
-                                      children: [
-                                        // Other widgets in the row if needed.
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Colors.red,
-                                        ), // Your icon here
-                                      ]),
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10.0),
-                                      topRight: Radius.circular(10.0),
-                                    ),
-                                    child: Image.network(
-                                      snapshot.data![index].defaultImage,
-                                      height: 160,
-
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
+                    if(snapshot.hasData){
+                      return GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12.0,
+                            mainAxisSpacing: 12.0,
+                            mainAxisExtent: 300,
+                          ),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    16.0,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "₹ ${snapshot.data![index].listingNumPrice}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle1!
-                                              .merge(
-                                                const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5.0,
-                                        ),
-                                        Text(snapshot.data![index].model
-                                            .toString()),
-                                        const SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              snapshot
-                                                  .data![index].deviceStorage
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                "condition: ${snapshot.data![index].deviceCondition}",
-                                                style: const TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.right,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    const Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .end, // Align the icon to the right
+                                        children: [
+                                          // Other widgets in the row if needed.
+                                          Icon(
+                                            Icons.favorite_border,
+                                            color: Colors.red,
+                                          ), // Your icon here
+                                        ]),
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0),
+                                      ),
+                                      child: Image.network(
+                                        snapshot.data![index].defaultImage,
+                                        height: 160,
+
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "₹ ${snapshot.data![index].listingNumPrice}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1!
+                                                .merge(
+                                              const TextStyle(
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              snapshot
-                                                  .data![index].listingLocation
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Text(
+                                          ),
+                                          const SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(snapshot.data![index].model
+                                              .toString()),
+                                          const SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
                                                 snapshot
-                                                    .data![index].listingDate
+                                                    .data![index].deviceStorage
                                                     .toString(),
                                                 style: const TextStyle(
                                                   fontSize: 10,
                                                 ),
-                                                textAlign: TextAlign.right,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                              Expanded(
+                                                child: Text(
+                                                  "condition: ${snapshot.data![index].deviceCondition}",
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                  ),
+                                                  textAlign: TextAlign.right,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                snapshot
+                                                    .data![index].listingLocation
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  snapshot
+                                                      .data![index].listingDate
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                  ),
+                                                  textAlign: TextAlign.right,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        });
+                                  ],
+                                ),
+                              );
+                            }
+                          });
+                    }else{
+                      return Center(child: CircularProgressIndicator());
+                    }
+
                   })
             ],
           ),
