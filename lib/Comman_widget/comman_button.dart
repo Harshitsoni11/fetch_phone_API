@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CommanButton extends StatefulWidget {
+class
+CommanButton extends StatefulWidget {
 
   IconData icon;
   String title;

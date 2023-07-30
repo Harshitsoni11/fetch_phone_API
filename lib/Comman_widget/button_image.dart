@@ -1,6 +1,6 @@
 
 class Buttonlist{
-  static List<String> logoimage=["https://e7.pngegg.com/pngimages/566/77/png-clipart-apple-logo-apple-watch-logo-apple-logo-heart-logo.png",
+  static List<String> logoimage=["https://www.freepnglogos.com/uploads/apple-logo-png/apple-logo-png-dallas-shootings-don-add-are-speech-zones-used-4.png",
   "https://images.samsung.com/is/image/samsung/assets/in/about-us/brand/logo/mo/360_197_1.png",
   "https://logos-world.net/wp-content/uploads/2020/07/Xiaomi-Logo.png",
     "https://logos-download.com/wp-content/uploads/2022/12/Vivo_Electronics_Logo-700x183.png"];

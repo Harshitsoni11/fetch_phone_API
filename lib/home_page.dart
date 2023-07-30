@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:assignment_flutter/Comman_widget/button_image.dart';
 import 'package:assignment_flutter/Filter_page.dart';
 import 'package:assignment_flutter/Services/phone_service.dart';
+import 'package:assignment_flutter/search_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+
 
 import 'Comman_widget/comman_button.dart';
 
@@ -23,11 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final PageController pageController;
   int pageNo = 0;
-  TextEditingController _searchController = TextEditingController();
-  Timer? _debounce;
-  List<String> searchResults = [];
-  List<String> searchmodel=[];
-  bool isSearching = true;
+
 
   @override
   void initState() {
@@ -36,65 +33,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<void> _makeAPICall(String query) async {
-    // Replace this URL with your POST API endpoint
 
-    if (query.isEmpty) {
-      setState(() {
-        searchResults.clear();
-        searchmodel.clear();
-      });
-    }
-
-    // Make the POST API call using http package
-
-
-
-    Response response = await http.post(Uri.parse(AppUri.searchmodelurl), body: {
-      "searchModel":jsonEncode(query)
-    },headers: {'Content-Type': 'application/json'},);
-  //  print(response.statusCode); // Check the response status code
- //   print(response.body);
-    print(response.body);
-    if (response.statusCode == 200) {
-      // If the API call is successful, parse the response and update the UI
-
-      Map<String, dynamic> data = json.decode(response.body);
-      //print(data);
-      List<String> makes = List<String>.from(data['makes']);
-      List<String> models = List<String>.from(data['models']);
-
-      print(makes.length);
-
-
-
-      setState(() {
-        searchResults = makes;
-        searchmodel=models;
-
-      });
-    } else {
-      // Handle API error here
-      setState(() {
-        searchResults.clear();
-        searchmodel.clear();
-      });
-    }
-  }
-
-
-  void _onSearchChanged(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), ()
-    {
-      _makeAPICall(query);
-    });
-
-  }
   @override
   void dispose() {
     pageController.dispose();
-    _searchController.dispose();
+
     super.dispose();
   }
 
@@ -133,56 +76,40 @@ class _HomePageState extends State<HomePage> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size(30, 30),
-          child: InkWell(
+          child: TextFormField(
             onTap: (){
-
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchPage()),);
             },
-            child: TextFormField(
-              controller: _searchController,
 
-              onChanged: (query) => _onSearchChanged(query),
-
-              decoration: InputDecoration(
-              prefixIcon: IconButton(
-                onPressed: (){
-                  if(isSearching==false){
-                    isSearching=true;
-                  }else{
-                    isSearching=false;
-                  }
-
-                  setState(() {
-
-                  });
-                },
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                ),
+            decoration: InputDecoration(
+            prefixIcon: IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.grey,
+              ), onPressed: () {  },
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            hintText: 'Search with make and model',
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50.0),
+              borderSide: const BorderSide(
+                color: Colors.white,
+                width: 2.0,
               ),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              hintText: 'Search with make and model',
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50.0),
+            ),
+            border: OutlineInputBorder(
                 borderSide: const BorderSide(
+                  width: 2,
                   color: Colors.white,
-                  width: 2.0,
                 ),
-              ),
-              border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 2,
-                    color: Colors.white,
-                  ),
-                  borderRadius: BorderRadius.circular(50.0)),
-            ),),
-          ),
+                borderRadius: BorderRadius.circular(50.0)),
+          ),),
         )
       ),
-      body:  isSearching ? SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -206,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                               child: Card(
                                 color: Colors.white,
                                 elevation: 12.0,
+
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
@@ -514,24 +442,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       )
-          : SafeArea(child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Brand',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-          ),
-          Expanded(
-            child: ListView.builder( itemCount: searchResults.length,
-            itemBuilder: (context,index)=> Text(
 
-                searchResults[index])),
-          ),
 
-          SizedBox(height: 5,),
-          
-          Expanded(child: ListView.builder(itemCount: searchmodel.length,itemBuilder: (context,index)=> Text(searchmodel[index]))),
-        ],
-      )),
     );
   }
 }
